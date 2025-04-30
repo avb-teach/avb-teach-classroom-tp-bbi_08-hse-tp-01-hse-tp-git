@@ -12,7 +12,7 @@ def collect_file_dirrs(in_dirr, out_dirr):
             target_path = os.path.join(out_dirr, file_dirr)
             shutil.copy(full_path, target_path)
 
-if name == "__main__":
+if __name__ == "__main__":
     if len(sys.argv) < 3:
         sys.exit(1)
     in_dirr = sys.argv[1]
