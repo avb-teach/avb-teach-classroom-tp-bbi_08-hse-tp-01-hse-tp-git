@@ -2,10 +2,6 @@ import os
 import sys
 import shutil
 
-def glubb(base, path):
-    rel_path = os.path.relpath(path, base)
-    return rel_path.count(os.sep)
-
 def collect_file_dirrs(in_dirr, out_dirr, max_depth=None):
     if not os.path.isdir(in_dirr):
         sys.exit(0)
@@ -17,7 +13,10 @@ def collect_file_dirrs(in_dirr, out_dirr, max_depth=None):
             parts = rel_path.split(os.sep)
 
             if max_depth is not None:
-                trimmed_parts = parts[-(max_depth - 1):] if max_depth > 1 else [parts[-1]]
+                if max_depth <= 1:
+                    trimmed_parts = [file]
+                else:
+                    trimmed_parts = parts[-(max_depth - 1):]
                 dst = os.path.join(out_dirr, *trimmed_parts)
             else:
                 dst = os.path.join(out_dirr, file)
@@ -33,6 +32,7 @@ def collect_file_dirrs(in_dirr, out_dirr, max_depth=None):
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         sys.exit(1)
+
     in_dirr = sys.argv[1]
     out_dirr = sys.argv[2]
     max_depth = None
