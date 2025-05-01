@@ -10,22 +10,24 @@ def collect_file_dirrs(in_dirr, out_dirr, max_depth=None):
     if not os.path.isdir(in_dirr):
         sys.exit(0)
 
-    for root, dirrs, file_dirrs in os.walk(in_dirr):
+    for root, dirs, files in os.walk(in_dirr):
         depth = glubb(in_dirr, root)
         if max_depth is not None and depth > max_depth:
             continue
+
         rel_path = os.path.relpath(root, in_dirr)
-        aim_dir = os.path.join(out_dirr, rel_path)
+        aim_dir = os.path.join(out_dirr, rel_path) if max_depth is not None else out_dirr
         os.makedirs(aim_dir, exist_ok=True)
 
-        for file_dirr in file_dirrs:
-            src = os.path.join(root, file_dirr)
+        for file in files:
+            src = os.path.join(root, file)
+
             if max_depth is not None:
-                dst = os.path.join(aim_dir, file_dirr)
+                dst = os.path.join(aim_dir, file)
             else:
-                dst = os.path.join(aim_dir, file_dirr)
+                dst = os.path.join(aim_dir, file)
+                name, ext = os.path.splitext(file)
                 count = 1
-                name, ext = os.path.splitext(file_dirr)
                 while os.path.exists(dst):
                     dst = os.path.join(aim_dir, f"{name}_{count}{ext}")
                     count += 1
@@ -35,14 +37,17 @@ def collect_file_dirrs(in_dirr, out_dirr, max_depth=None):
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         sys.exit(1)
+
     in_dirr = sys.argv[1]
     out_dirr = sys.argv[2]
     max_depth = None
 
     if "--max_depth" in sys.argv:
         try:
-            id = sys.argv.index("--max_depth")
-            max_depth = int(sys.argv[id + 1])
+            idx = sys.argv.index("--max_depth")
+            if idx + 1 < len(sys.argv):
+                max_depth = int(sys.argv[idx + 1])
         except:
-            max_depth = None
+            pass
+
     collect_file_dirrs(in_dirr, out_dirr, max_depth)
