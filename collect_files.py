@@ -37,7 +37,10 @@ if __name__ == "__main__":
     max_depth = None
 
     if "--max_depth" in sys.argv:
-        max_depth = int(sys.argv[i + 1])
+        try:
+            max_depth = int(sys.argv[i + 1])
+        except:
+            max_depth = None
 
 
     collect_file_dirrs(in_dirr, out_dirr, max_depth)
