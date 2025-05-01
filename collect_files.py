@@ -20,12 +20,15 @@ def collect_file_dirrs(in_dirr, out_dirr, max_depth=None):
 
         for file_dirr in file_dirrs:
             src = os.path.join(root, file_dirr)
-            dst = os.path.join(aim_dir, file_dirr)
-            count = 1
-            name, ext = os.path.splitext(file_dirr)
-            while os.path.exists(dst):
-                dst = os.path.join(aim_dir, f"{name}_{count}{ext}")
-                count += 1
+            if max_depth is not None:
+                dst = os.path.join(aim_dir, file_dirr)
+            else:
+                dst = os.path.join(aim_dir, file_dirr)
+                count = 1
+                name, ext = os.path.splitext(file_dirr)
+                while os.path.exists(dst):
+                    dst = os.path.join(aim_dir, f"{name}_{count}{ext}")
+                    count += 1
 
             shutil.copy(src, dst)
 
