@@ -4,7 +4,7 @@ import shutil
 
 def glubb(base, path):
     rel_path = os.path.relpath(path, base)
-    return rel_path.count(os.sep)
+    return rel_path.count(os.sep) + 1
 
 def collect_file_dirrs(in_dirr, out_dirr, max_depth=None):
     if not os.path.isdir(in_dirr):
